@@ -22,10 +22,10 @@ try {
 
 module.exports = function newPooledPostgreSQL(cfg) {
 
-    var ctype = cfg.type || "postgresql"; // Also accept "remote". See https://www.npmjs.com/package/pooled-pg#remote-connections
+    var proto = cfg.protocol || "postgresql"; // Also accept "remote". See https://www.npmjs.com/package/pooled-pg#remote-connections
 
 
-    var connStr = ctype+"://"
+    var connStr = proto+"://"
         + cfg.user
         + ":" + cfg.password
         + "@" + cfg.connect

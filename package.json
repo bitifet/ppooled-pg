@@ -1,6 +1,6 @@
 {
   "name": "ppooled-pg",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Promisified PostgreSQL driver with more effective pooling strategies.",
   "main": "index.js",
   "scripts": {
