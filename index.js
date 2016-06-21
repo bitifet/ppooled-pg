@@ -31,8 +31,6 @@ module.exports = function newPooledPostgreSQL(cfg) {
         + "@" + cfg.connect
     ;
 
-    console.log ("connStr:", connStr);
-
     function promisedQuery(sql, prm) {//{{{
         if (sql instanceof Array && prm === undefined) {
             prm = sql[1];
