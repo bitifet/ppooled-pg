@@ -35,6 +35,8 @@ But push requests are welcome if anyone is interested in improving it.
     // var Promise = require("promise");
     
     var ppg = pPooled({
+        type: "postgresql", // "postgresql" (default) or "remote".
+                            // See https://www.npmjs.com/package/pooled-pg#advanced-usage-remote-mode
         user: "db_user_name",
         password: "db_user_password",
         connect: "db_user_connect_string",

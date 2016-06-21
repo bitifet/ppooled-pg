@@ -22,11 +22,16 @@ try {
 
 module.exports = function newPooledPostgreSQL(cfg) {
 
-    var connStr = "postgresql://"
+    var ctype = cfg.type || "postgresql"; // Also accept "remote". See https://www.npmjs.com/package/pooled-pg#remote-connections
+
+
+    var connStr = ctype+"://"
         + cfg.user
         + ":" + cfg.password
         + "@" + cfg.connect
     ;
+
+    console.log ("connStr:", connStr);
 
     function promisedQuery(sql, prm) {//{{{
         if (sql instanceof Array && prm === undefined) {
