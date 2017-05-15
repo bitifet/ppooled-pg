@@ -30,10 +30,6 @@ But push requests are welcome if anyone is interested in improving it.
 
     var pPooled = require("pooled-pg");
 
-    // If your node.js version doesn't support promises natively, you probably
-    // should execute "npm install promise" and comment out following row:
-    // var Promise = require("promise");
-    
     var ppg = pPooled({
         protocol: "postgresql", // "postgresql" (default) or "remote".
                             // See https://www.npmjs.com/package/pooled-pg#advanced-usage-remote-mode

@@ -11,14 +11,7 @@
 "use strict";
 
 var Pooled = require("pooled-pg");
-
-// Ensures Promise support available://{{{
-try {
-    if (Promise === undefined) throw "WTF!"; // Never get there...
-} catch (e) {
-    var Promise = require("promise");
-};//}}}
-
+var Promise = require("bluebird");
 
 module.exports = function newPooledPostgreSQL(cfg) {
 
