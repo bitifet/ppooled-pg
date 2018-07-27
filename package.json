@@ -1,6 +1,6 @@
 {
   "name": "ppooled-pg",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Promisified PostgreSQL driver with more effective pooling strategies.",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/bitifet/ppooled-pg#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
+    "deasync": "^0.1.13",
     "pooled-pg": "0.0.7"
   }
 }

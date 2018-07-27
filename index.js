@@ -12,6 +12,19 @@
 
 var Pooled = require("pooled-pg");
 var Promise = require("bluebird");
+var Deasync = require("deasync");
+
+function dePromise(f, self) {
+    return Deasync(function() {
+        var args = Array.prototype.slice.call(arguments);
+        var cb = args.pop();
+
+        f.apply(self, args)
+            .then(x=>cb(null, x))
+            .catch(e=>cb(e))
+        ;
+    });
+};
 
 module.exports = function newPooledPostgreSQL(cfg) {
 
@@ -57,7 +70,9 @@ module.exports = function newPooledPostgreSQL(cfg) {
 
     return {
         query: promisedQuery,
-        queryRows: promisedQueryRows
+        queryRows: promisedQueryRows,
+        querySync: dePromise(promisedQuery),
+        queryRowsSync: dePromise(promisedQueryRows),
     };
 
 };
