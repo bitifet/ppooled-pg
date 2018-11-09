@@ -10,14 +10,15 @@
 //
 "use strict";
 
-var Pooled = require("pooled-pg");
-var Promise = require("bluebird");
-var Deasync = require("deasync");
+const Pooled = require("pooled-pg");
+const Promise = require("bluebird");
+const Deasync = require("deasync");
+const $args$ = Symbol.for("arguments");
 
 function dePromise(f, self) {
     return Deasync(function() {
-        var args = Array.prototype.slice.call(arguments);
-        var cb = args.pop();
+        const args = Array.prototype.slice.call(arguments);
+        const cb = args.pop();
 
         f.apply(self, args)
             .then(x=>cb(null, x))
@@ -28,10 +29,10 @@ function dePromise(f, self) {
 
 module.exports = function newPooledPostgreSQL(cfg) {
 
-    var proto = cfg.protocol || "postgresql"; // Also accept "remote". See https://www.npmjs.com/package/pooled-pg#remote-connections
+    const proto = cfg.protocol || "postgresql"; // Also accept "remote". See https://www.npmjs.com/package/pooled-pg#remote-connections
 
 
-    var connStr = proto+"://"
+    const connStr = proto+"://"
         + cfg.user
         + ":" + cfg.password
         + "@" + cfg.connect
@@ -42,9 +43,23 @@ module.exports = function newPooledPostgreSQL(cfg) {
             prm = sql[1];
             sql = sql[0];
         };
+        prm || (prm = []);
+
+        // Accept named arguments if SQL has arguments symbol defined.
+        if (! (prm instanceof Array)) {
+            const argNames = sql[$args$];
+            const newPrm = [];
+            if (! (argNames instanceof Array)) throw "Query doesn't accept named arguments.";
+            for (let i=0; i<argNames.length; i++) {
+                let value = prm[argNames[i]];
+                newPrm.push(value === undefined ? null : value);
+            };
+            prm = newPrm;
+        };
+
         return new Promise (function(resolve, reject){
             Pooled.connect(connStr, function(error, client, done) {
-                client.query(sql, prm, function(error, result) {
+                client.query(String(sql), prm, function(error, result) {
                     done();
                     if (error) {
                         reject(error);
@@ -58,14 +73,9 @@ module.exports = function newPooledPostgreSQL(cfg) {
     };//}}}
 
     function promisedQueryRows(sql, prm) {//{{{
-        return new Promise (function(resolve, reject) {
-            promisedQuery(sql,prm)
-                .then(function(data){
-                    resolve(data.rows);
-                })
-                .catch(reject)
-            ;
-        });
+        return promisedQuery(sql,prm)
+            .then(data => data.rows)
+        ;
     };//}}}
 
     return {

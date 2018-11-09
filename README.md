@@ -7,7 +7,6 @@ ppooled-pg
 Brief
 -----
 
-
 This is simply a personal promise wrapper for wonderful but non promise aware
 PostgreSQL driver [pooled-pg](https://www.npmjs.com/package/pooled-pg).
 
@@ -15,6 +14,26 @@ This is not intended, at least nowadays, to be a complete full-featured tool.
 This only has methods I found handy for my own purposes.
 
 But push requests are welcome if anyone is interested in improving it.
+
+
+Índex
+-----
+
+<!-- vim-markdown-toc GitLab -->
+
+* [Setup](#setup)
+* [Usage](#usage)
+    * [Instantiation](#instantiation)
+    * [Promisified methods](#promisified-methods)
+        * [query(sql, args)](#querysql-args)
+        * [queryRows(sql, args)](#queryrowssql-args)
+    * [Synchronous methods](#synchronous-methods)
+    * [querySync(sql, args):](#querysyncsql-args)
+    * [queryRowsSync(sql, args):](#queryrowssyncsql-args)
+* [Advanced Features](#advanced-features)
+* [Contributing](#contributing)
+
+<!-- vim-markdown-toc -->
 
 
 Setup
@@ -124,6 +143,44 @@ try {
 };
 ```
 
+
+
+Advanced Features
+-----------------
+
+Passing arguments as an array can be awkward sometimes. Specially if you have a
+lot of them.
+
+JSON objects are much more handy, but most SQL engines only accept arguments as
+positional parameters.
+
+*ppooled-pg* takes advantadge of ES6+ wonderful *Symbol* feature to allow
+providing SQL as a String object with optional "arguments" symbol for that.
+
+**Example:**
+```
+const $args$ = Symbol.for("arguments");
+
+const sql = new String(`
+    select foo from bar
+    where baz = $1
+    and foobar = $2
+`);
+
+sql[$args$] = ["baz", "foobar"];
+
+ppg.queryRows(sql, {
+  foobar: "foobar value",
+  baz: "baz value"
+}).then(data=>console.log(data));
+
+```
+
+>
+Also, not provided values are silently replaced by nulls as well so, for
+inserts and updates, there is no need to pass all parameters if they aren't
+declared as 'NOT NULL' or have a default value.
+>
 
 
 Contributing
