@@ -31,6 +31,8 @@ But push requests are welcome if anyone is interested in improving it.
     * [querySync(sql, args):](#querysyncsql-args)
     * [queryRowsSync(sql, args):](#queryrowssyncsql-args)
 * [Advanced Features](#advanced-features)
+    * [Support for *SQL Tagged Templates*](#support-for-sql-tagged-templates)
+    * [*arguments* Symbol](#arguments-symbol)
 * [Contributing](#contributing)
 
 <!-- vim-markdown-toc -->
@@ -147,6 +149,26 @@ try {
 
 Advanced Features
 -----------------
+
+### Support for *SQL Tagged Templates*
+
+[SQL Tagged Templates (SQLTT)](https://www.npmjs.com/package/sqltt) version
+0.0.2 or higher are supported from ppooled-pg 0.3.0.
+
+That means we can pass an SQLTT instance instead of actual SQL string.
+
+In this case, proper *PostgreSQL* version of its SQL will be picked up and
+parameters will be parsed through its *args()* method.
+
+
+### *arguments* Symbol
+
+>
+**WARNING:** This feature was introduced before [SQL Tagged
+Templates](#support-for-sql-tagged-templates) and is mantained due to backward
+compatibility reasons. But it could be removed in future versions (in which
+case major version number would be increased too).
+>
 
 Passing arguments as an array can be awkward sometimes. Specially if you have a
 lot of them.
