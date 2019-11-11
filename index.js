@@ -36,10 +36,11 @@ function isSqltt(q) { // Duck-check for SQL Tagged Template{{{
     );
 };//}}}
 
-module.exports = function newPooledPostgreSQL(cfg) {
+module.exports = function newPooledPostgreSQL(cfg, defaults = {}) {
 
     const proto = cfg.protocol || "postgresql"; // Also accept "remote". See https://www.npmjs.com/package/pooled-pg#remote-connections
 
+    Object.entries(defaults).map(([k, v])=>Pooled.defaults[k]=v)
 
     const connStr = proto+"://"
         + cfg.user
